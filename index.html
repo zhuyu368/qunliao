@@ -5251,19 +5251,23 @@ class ChatApp {
     }
     
     /**
-     * 处理群成员头像上传
+     * 处理群成员头像上传 - 修改为使用压缩
      */
     handleGroupMemberAvatarUpload(e) {
         const file = e.target.files[0];
         if (!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const avatarPreview = document.getElementById('groupMemberAvatarPreview');
-            avatarPreview.innerHTML = `<img src="${event.target.result}" style="width:100%; height:100%; object-fit:cover;">`;
-            avatarPreview.style.background = 'transparent';
-        };
-        reader.readAsDataURL(file);
+
+        // 使用 compressImage 压缩头像，限制 200x200，质量 0.7
+        this.compressImage(file, { maxWidth: 200, maxHeight: 200, quality: 0.7 })
+            .then(compressedDataUrl => {
+                const avatarPreview = document.getElementById('groupMemberAvatarPreview');
+                avatarPreview.innerHTML = `<img src="${compressedDataUrl}" style="width:100%; height:100%; object-fit:cover;">`;
+                avatarPreview.style.background = 'transparent';
+            })
+            .catch(err => {
+                console.error('头像压缩失败', err);
+                this.showNotification('头像处理失败，请重试');
+            });
     }
     
     initSendSettingsUI() {
