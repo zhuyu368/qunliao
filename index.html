@@ -8862,45 +8862,36 @@ class ChatApp {
     }
 
     sendPokeMessage(sender = 'self', suffix = null) {
-        // 如果没有提供后缀，从文案库随机选一条
-        if (!suffix) {
-            const phrases = this.appData.pokeSettings?.phrases;
-            if (!phrases || phrases.length === 0) {
-                suffix = "拍了拍你"; // 默认
-            } else {
-                suffix = phrases[Math.floor(Math.random() * phrases.length)];
-            }
-        }
-
-        // 构建显示文本
-        let displayText = '';
-        if (sender === 'self') {
-            // 我拍对方
-            const otherName = this.appData.otherInfo?.nickname || '对方';
-            displayText = ` 我拍了拍 ${otherName} ${suffix}`;
+    // 如果没有提供后缀，从文案库随机选一条
+    if (!suffix) {
+        const phrases = this.appData.pokeSettings?.phrases;
+        if (!phrases || phrases.length === 0) {
+            suffix = "拍了拍你"; // 默认
         } else {
-            // 对方拍我
-            const selfName = this.appData.selfInfo?.nickname || '我';
-            displayText = ` ${this.appData.otherInfo?.nickname || '对方'} 拍了拍 ${selfName} ${suffix}`;
+            suffix = phrases[Math.floor(Math.random() * phrases.length)];
         }
-
-        // 创建拍一拍消息对象
-        const pokeMessage = {
-            id: this.dataManager.generateMessageId(),
-            type: 'poke',                 // 标记为拍一拍类型
-            text: displayText,
-            sender: sender,
-            time: this.getCurrentTime(),
-            read: true,                    // 拍一拍不关心已读
-            isPoke: true
-        };
-
-        this.appData.messages.push(pokeMessage);
-        this.renderMessages();
-        this.saveAllData();
-
-        // 拍一拍不触发任何回复逻辑
     }
+
+    // 构建显示文本：直接使用后缀（去除首尾空格）
+    const displayText = suffix.trim();
+
+    // 创建拍一拍消息对象
+    const pokeMessage = {
+        id: this.dataManager.generateMessageId(),
+        type: 'poke',
+        text: displayText,
+        sender: sender,
+        time: this.getCurrentTime(),
+        read: true,
+        isPoke: true
+    };
+
+    this.appData.messages.push(pokeMessage);
+    this.renderMessages();
+    this.saveAllData();
+
+    // 拍一拍不触发任何回复逻辑
+}
 }
 
 // ========================
