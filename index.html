@@ -2535,19 +2535,21 @@ input:checked + .slider:before {
   color: var(--tarot-text);
 }
 
-/* ===== 新增拍一拍消息样式 ===== */
+/* ===== 拍一拍消息样式 ===== */
 .poke-message {
-    background: transparent !important;
-    color: #888 !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #666 !important;
     font-size: 0.75rem !important;
     text-align: center;
-    padding: 4px 8px !important;
-    margin: 2px auto !important;
-    max-width: 80% !important;
-    box-shadow: none !important;
-    border-left: none !important;
-    border-bottom: none !important;
+    padding: 6px 12px !important;
+    margin: 4px auto !important;
+    max-width: 70% !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(2px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
     cursor: default !important;
+    transition: all 0.2s ease !important;
 }
 
 .poke-message .message-time {
@@ -2555,8 +2557,31 @@ input:checked + .slider:before {
 }
 
 .poke-message:hover {
-    opacity: 1 !important;
-    background: transparent !important;
+    background: rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 夜间模式下的拍一拍消息 */
+.night-mode .poke-message {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ccc !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.night-mode .poke-message:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+/* 区分发送者的拍一拍消息 */
+.message-container.self .poke-message {
+    background: rgba(138, 127, 141, 0.1) !important;
+    border-color: rgba(138, 127, 141, 0.3) !important;
+}
+
+.message-container.other .poke-message {
+    background: rgba(158, 158, 158, 0.1) !important;
+    border-color: rgba(158, 158, 158, 0.3) !important;
 }
 /* ===== 拍一拍消息样式结束 ===== */
 
@@ -3376,7 +3401,7 @@ input:checked + .slider:before {
         <div class="sticker-picker-popover" id="user-sticker-picker">
           <div class="combo-tabs-header">
             <button class="combo-tab-btn active" data-tab="sticker">😊 表情库</button>
-            <button class="combo-tab-btn" data-tab="poke">✨ 拍一拍</button>
+            <button class="combo-tab-btn" data-tab="poke"> 拍一拍</button>
           </div>
           <div class="combo-content-area" id="combo-content-area"></div>
         </div>
@@ -8852,11 +8877,11 @@ class ChatApp {
         if (sender === 'self') {
             // 我拍对方
             const otherName = this.appData.otherInfo?.nickname || '对方';
-            displayText = `✨ 我拍了拍 ${otherName} ${suffix}`;
+            displayText = ` 我拍了拍 ${otherName} ${suffix}`;
         } else {
             // 对方拍我
             const selfName = this.appData.selfInfo?.nickname || '我';
-            displayText = `✨ ${this.appData.otherInfo?.nickname || '对方'} 拍了拍 ${selfName} ${suffix}`;
+            displayText = ` ${this.appData.otherInfo?.nickname || '对方'} 拍了拍 ${selfName} ${suffix}`;
         }
 
         // 创建拍一拍消息对象
